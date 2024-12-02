@@ -1,5 +1,5 @@
 public class Instrucao {
-    private InstrucaoTipo tipo; // tipo de instrucaos
+    private InstrucaoTipoEnum tipo; // tipo de instrucaos
     
     private Integer op1; // index do registrador ou constante
     private Integer op2; // index do registrador ou constante
@@ -8,8 +8,8 @@ public class Instrucao {
 
     public Instrucao() {}
 
-    public void setTipo(InstrucaoTipo tipo) { this.tipo = tipo; }
-    public InstrucaoTipo getTipo() { return this.tipo; }
+    public void setTipo(InstrucaoTipoEnum tipo) { this.tipo = tipo; }
+    public InstrucaoTipoEnum getTipo() { return this.tipo; }
 
     public void setOp1(Integer op1) { this.op1 = op1; }
     public Integer getOp1() { return this.op1; }

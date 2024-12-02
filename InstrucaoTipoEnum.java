@@ -1,4 +1,4 @@
-public enum InstrucaoTipo {
+public enum InstrucaoTipoEnum {
     ADD,
     SUB,
     DIV,
