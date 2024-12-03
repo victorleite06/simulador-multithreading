@@ -5,19 +5,46 @@
     - Essa abordagem é útil em cenários onde a ordem de execução é importante, mas ainda se busca algum nível de paralelismo.
  */
 
-package Arquiteturas;
-
-import Core.Instrucao;
-
-public class IMT extends ArquiteturaBase {
-
-	public IMT() {
-		//super();
-	}
-
-	@Override
-	public void executarCiclo() {
-		
-	}
-
-}
+ import java.util.List;
+ import java.util.ArrayList;
+ 
+ public class IMT extends ArquiteturaBase {
+     private static final int NUM_THREADS = 4; // Número de threads
+ 
+     public IMT(int numeroRegistradores) {
+         super(numeroRegistradores);
+     }
+ 
+     @Override
+     protected void executarCiclo() {
+         if (this.instrucoes.isEmpty()) { // Lista de instruções vazia
+             pararExecucao();
+             return;
+         }
+ 
+         // Cria e inicia múltiplas threads para processar as instruções
+         List<Thread> threads = new ArrayList<>();
+         for (int i = 0; i < NUM_THREADS && !this.instrucoes.isEmpty(); i++) {
+             final Instrucao instrucao = this.instrucoes.remove(0); // Remove a instrução da lista
+ 
+             Thread thread = new Thread(() -> {
+                 System.out.println("Executando instrução " + instrucao.getTipo() + " em thread IMT");
+                 iniciarExecucao();
+             });
+ 
+             threads.add(thread);
+             thread.start();
+         }
+ 
+         // Espera todas as threads terminarem
+         for (Thread thread : threads) {
+             try {
+                 thread.join();
+             } catch (InterruptedException e) {
+                 e.printStackTrace();
+             }
+         }
+ 
+         this.cicloExecucao++; // Incrementa o contador de ciclos
+     }
+ }
