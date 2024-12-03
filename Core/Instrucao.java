@@ -16,7 +16,7 @@ public class Instrucao {
     public Instrucao(InstrucaoTipoEnum tipo, Integer op1, Integer op2, Integer registradorIndex) {
         this.tipo = tipo; 
         this.setOp1(op1);  // Validações no setter
-        this.setOp2(op1);  // Validações no setter
+        this.setOp2(op2);  // Validações no setter
         this.setRegistradorIndex(registradorIndex);  // Validações no setter
     }
 
