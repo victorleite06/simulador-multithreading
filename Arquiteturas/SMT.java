@@ -4,9 +4,12 @@
     - Em vez de agrupar várias instruções em blocos, cada thread pode ter seu próprio conjunto de instruções e os threads podem ser processados em paralelo.
     - Ideal para sistemas que exigem alta utilização do processador, especialmente em tarefas que podem ser executadas em paralelo, como processamento de gráficos ou cálculos pesados.
  */
+package Arquiteturas;
+
+import Core.Instrucao;
  
- import java.util.List;
- import java.util.ArrayList;
+import java.util.List;
+import java.util.ArrayList;
  
  public class SMT extends ArquiteturaBase {
      private static final int NUM_THREADS = 4; // Número de threads simultâneas
