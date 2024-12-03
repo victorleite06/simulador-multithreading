@@ -1,23 +1,50 @@
 /*
- * Arquitetura SMT (Simultaneous Multi-Threading):
-    - A arquitetura **SMT** permite que múltiplas threads sejam executadas simultaneamente no mesmo núcleo de processador, compartilhando os recursos de execução (como unidades de ALU, unidades de carga/armazenamento, etc.).
-    - Ao contrário da IMT, onde a ordem das instruções é mantida, a SMT permite que as threads sejam intercaladas de forma mais eficiente, aproveitando melhor o ciclo de execução de cada unidade de execução.
-    - Com a SMT, um único núcleo pode executar múltiplas threads ao mesmo tempo, o que melhora a utilização do processador e aumenta o desempenho geral, principalmente em tarefas paralelizadas.
+ * Arquitetura SMT (Simultaneous Multithreading):
+    - A arquitetura **SMT** permite que múltiplos threads sejam executados simultaneamente no mesmo núcleo.
+    - Em vez de agrupar várias instruções em blocos, cada thread pode ter seu próprio conjunto de instruções e os threads podem ser processados em paralelo.
+    - Ideal para sistemas que exigem alta utilização do processador, especialmente em tarefas que podem ser executadas em paralelo, como processamento de gráficos ou cálculos pesados.
  */
-
-package Arquiteturas;
-
-import Core.Instrucao;
-
-public class SMT extends ArquiteturaBase {
-
-	public SMT() {
-		//super();
-	}
-
-	@Override
-	public void executarCiclo() {
-		
-	}
-
-}
+ 
+ import java.util.List;
+ import java.util.ArrayList;
+ 
+ public class SMT extends ArquiteturaBase {
+     private static final int NUM_THREADS = 4; // Número de threads simultâneas
+     
+     public SMT(int numeroRegistradores) {
+         super(numeroRegistradores);
+     }
+ 
+     @Override
+     protected void executarCiclo() {
+         if (this.instrucoes.isEmpty()) { // Lista de instruções vazia
+             pararExecucao();
+             return;
+         }
+ 
+         // Cria e inicia múltiplas threads para processar as instruções simultaneamente
+         List<Thread> threads = new ArrayList<>();
+         for (int i = 0; i < NUM_THREADS && !this.instrucoes.isEmpty(); i++) {
+             final Instrucao instrucao = this.instrucoes.remove(0); // Remove a instrução da lista
+ 
+             Thread thread = new Thread(() -> {
+                 System.out.println("Executando instrução " + instrucao.getTipo() + " em thread SMT");
+                 iniciarExecucao();
+             });
+ 
+             threads.add(thread);
+             thread.start();
+         }
+ 
+         // Espera todas as threads terminarem
+         for (Thread thread : threads) {
+             try {
+                 thread.join();
+             } catch (InterruptedException e) {
+                 e.printStackTrace();
+             }
+         }
+ 
+         this.cicloExecucao++; // Incrementa o contador de ciclos
+     }
+ }
