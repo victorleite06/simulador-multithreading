@@ -5,8 +5,12 @@
     - Essa abordagem é útil em cenários onde a ordem de execução é importante, mas ainda se busca algum nível de paralelismo.
  */
 
- import java.util.List;
- import java.util.ArrayList;
+package Arquiteturas;
+
+import Core.Instrucao;
+
+import java.util.List;
+import java.util.ArrayList;
  
  public class IMT extends ArquiteturaBase {
      private static final int NUM_THREADS = 4; // Número de threads
