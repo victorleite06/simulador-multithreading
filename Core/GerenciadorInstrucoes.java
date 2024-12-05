@@ -4,7 +4,7 @@ import java.util.List;
 
 public class GerenciadorInstrucoes { // Gerenciador de instrucoes para o processador
     private List<Instrucao> instrucoes; // Lista de instrucoes a serem executadas
-    private int limite = 100; // Limite de instrucoes a serem executadas
+    private final int limite = 100; // Limite de instrucoes a serem executadas
 
     public GerenciadorInstrucoes() { // Construtor padrão
         instrucoes = new ArrayList<>();
