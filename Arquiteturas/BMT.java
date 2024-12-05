@@ -55,6 +55,48 @@ public class BMT extends ArquiteturaBase {
                 escreverRegistrador(instrucao.getRegistradorIndex(), resultado); // Escreve o resultado no registrador
                 break; // Sai do switch
 
+            case DIV:
+                op1 = lerRegistrador(instrucao.getOp1()); // Lê o valor do registrador
+                op2 = lerRegistrador(instrucao.getOp2()); // Lê o valor do registrador
+                resultado = op1 / op2; // Realiza a operação
+                escreverRegistrador(instrucao.getRegistradorIndex(), resultado); // Escreve o resultado no registrador
+                break; // Sai do switch
+
+            case MUL:
+                op1 = lerRegistrador(instrucao.getOp1()); // Lê o valor do registrador
+                op2 = lerRegistrador(instrucao.getOp2()); // Lê o valor do registrador
+                resultado = op1 * op2; // Realiza a operação
+                escreverRegistrador(instrucao.getRegistradorIndex(), resultado); // Escreve o resultado no registrador
+                break; // Sai do switch
+
+            case LW:
+                op1 = instrucao.getOp1(); // Pega valor constante
+                op2 = lerRegistrador(instrucao.getOp2()); // Lê o valor do registrador
+                escreverRegistrador(instrucao.getRegistradorIndex(), lerRegistrador(op1 + op2)); // Lê e escreve no registrador
+                break; // Sai do switch
+
+            case SW:
+                op1 = instrucao.getOp1(); // Pega valor constante
+                op2 = lerRegistrador(instrucao.getOp2()); // Lê o valor do registrador
+                escreverRegistrador((op1 + op2), lerRegistrador(instrucao.getRegistradorIndex())); // Lê e escreve no registrador
+                break; // Sai do switch
+
+            case BEQ:
+
+                break; // Sai do switch
+
+            case BNE:
+
+                break; // Sai do switch
+
+            case JMP:
+
+                break; // Sai do switch
+
+            case HALT:
+                pararExecucao(); // Para a execução da simulação
+                break; // Sai do switch
+
             default: // Caso a instrução não seja suportada
                 System.out.println("Instrução não suportada no BMT");
                 break;

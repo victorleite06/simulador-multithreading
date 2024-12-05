@@ -44,6 +44,8 @@ public class Principal {
         gerenciadorInstrucoes.adicionarInstrucao(new Instrucao(InstrucaoTipoEnum.SUB, 1, 2, 3));
         gerenciadorInstrucoes.adicionarInstrucao(new Instrucao(InstrucaoTipoEnum.MUL, 2, 3, 4));
         gerenciadorInstrucoes.adicionarInstrucao(new Instrucao(InstrucaoTipoEnum.DIV, 3, 4, 5));
+        gerenciadorInstrucoes.adicionarInstrucao(new Instrucao(InstrucaoTipoEnum.LW, 4, 5, 6));
+        gerenciadorInstrucoes.adicionarInstrucao(new Instrucao(InstrucaoTipoEnum.SW, 5, 6, 7));
         
         // Adiciona as instruções à arquitetura selecionada
         while (gerenciadorInstrucoes.temInstrucoes()) {
