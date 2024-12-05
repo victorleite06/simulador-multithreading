@@ -47,7 +47,7 @@ public class Principal {
         
         // Adiciona as instruções à arquitetura selecionada
         while (gerenciadorInstrucoes.temInstrucoes()) {
-            arquitetura.adicionarInstrução(gerenciadorInstrucoes.proximaInstrucao());
+            arquitetura.adicionarInstrucao(gerenciadorInstrucoes.proximaInstrucao());
         }
         
         // Inicia a execução da arquitetura selecionada

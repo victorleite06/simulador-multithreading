@@ -33,7 +33,7 @@ public abstract class ArquiteturaBase {
     protected abstract void executarCiclo();
 
     // Adiciona uma instrução à fila de execução
-    public void adicionarInstrução(Instrucao instrucao) {
+    public void adicionarInstrucao(Instrucao instrucao) {
         this.instrucoes.add(instrucao);
     }
 
