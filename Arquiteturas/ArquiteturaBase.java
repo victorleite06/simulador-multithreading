@@ -25,7 +25,7 @@ public abstract class ArquiteturaBase {
         // Inicializa os registradores (assumindo que são inteiros de 32 bits)
         for (int i = 0; i < numeroRegistradores; i++) {
             //this.registradores.add(0);  // Inicializando registradores com 0
-            int random = (int) Math.ceil(Math.random());
+            int random = (int) Math.ceil(Math.random() * 101);
             this.registradores.add(random > 0 ? random : (random * -1));  // Inicializando registradores com valores aleatórios
         }
     }
