@@ -1,3 +1,11 @@
+import Arquiteturas.ArquiteturaBase;
+import Arquiteturas.BMT;
+import Arquiteturas.IMT;
+import Arquiteturas.SMT;
+import Core.GerenciadorInstrucoes;
+import Core.Instrucao;
+import Core.InstrucaoTipoEnum;
+
 import java.util.Scanner;
 
 public class Principal {
