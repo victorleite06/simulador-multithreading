@@ -28,7 +28,7 @@ public class Pipeline {
             Instrucao finalizada = estagios.remove(estagios.size() - 1); // Remove a última instrução do pipeline
             if (finalizada != null) { // Armazena a instrução finalizada na lista de instruções finalizadas
                 instrucoesFinalizadas.add(finalizada); 
-            }        
+            }
 
             estagios.add(0, novaInstrucao); // Adiciona uma nova instrução no início do pipeline
         }
