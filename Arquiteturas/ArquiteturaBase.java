@@ -11,28 +11,35 @@ public abstract class ArquiteturaBase {
     // Armazenamento dos registradores e instruções
     protected List<Integer> registradores;  // Lista de registradores
     protected List<Instrucao> instrucoes;  // Fila de instruções a serem executadas
-    
+    protected List<Integer> memoria; // Memória de dados
+
     // Estado da execução
     protected boolean emExecucao; // Indica se a execução está em andamento
     protected int cicloExecucao; // Contador de ciclos de execução
+    protected int pc; // Program Counter (contador de programa)
 
     // Construtores
-    public ArquiteturaBase(int numeroRegistradores) {
+    public ArquiteturaBase(int numeroRegistradores, int tamanhoMemoria) {
         this.registradores = new ArrayList<>(numeroRegistradores);
         this.instrucoes = new ArrayList<>();
+        this.memoria = new ArrayList<>(tamanhoMemoria);
         this.emExecucao = false;
         this.cicloExecucao = 0;
+        this.pc = 0; // Inicializa o contador de programa
 
         // Inicializa os registradores (assumindo que são inteiros de 32 bits)
         for (int i = 0; i < numeroRegistradores; i++) {
-            //this.registradores.add(0);  // Inicializando registradores com 0
             int random = (int) Math.ceil(Math.random() * 101);
             this.registradores.add(random > 0 ? random : (random * -1));  // Inicializando registradores com valores aleatórios
+        }
+
+        // Inicializa a memória com 0s
+        for (int i = 0; i < tamanhoMemoria; i++) {
+            this.memoria.add(0);
         }
     }
 
     // Métodos abstratos
-    // Executar um ciclo de execução (Esse Método abstrato deve ser implementado nas subclasses)
     protected abstract void executarCiclo();
 
     // Adiciona uma instrução à fila de execução
@@ -51,6 +58,7 @@ public abstract class ArquiteturaBase {
         // Executa enquanto houver instruções na fila e a execução não foi interrompida
         while (this.emExecucao && !this.instrucoes.isEmpty()) {
             executarCiclo();
+            incrementarCiclo();
         }
     }
 
@@ -60,14 +68,13 @@ public abstract class ArquiteturaBase {
     }
 
     // Métodos de acesso aos registradores
-    public int lerRegistrador(int index) { // Retorna o valor do registrador
+    public int lerRegistrador(int index) {
         if (index < 0 || index >= this.registradores.size()) {
             throw new IndexOutOfBoundsException("Índice de registrador inválido.");
         }
         return this.registradores.get(index);
     }
 
-    // Escrever um valor no registrador manualmente
     public void escreverRegistrador(int index, int valor) {
         if (index < 0 || index >= this.registradores.size()) {
             throw new IndexOutOfBoundsException("Índice de registrador inválido.");
@@ -75,7 +82,121 @@ public abstract class ArquiteturaBase {
         this.registradores.set(index, valor);
     }
 
-    // Getters
+    // Métodos de acesso à memória
+    public int lerMemoria(int endereco) {
+        if (endereco < 0 || endereco >= this.memoria.size()) {
+            throw new IndexOutOfBoundsException("Endereço de memória inválido.");
+        }
+        return this.memoria.get(endereco);
+    }
+
+    public void escreverMemoria(int endereco, int valor) {
+        if (endereco < 0 || endereco >= this.memoria.size()) {
+            throw new IndexOutOfBoundsException("Endereço de memória inválido.");
+        }
+        this.memoria.set(endereco, valor);
+    }
+
+    // Incrementa o contador de ciclos de execução
+    public void incrementarCiclo() {
+        this.cicloExecucao++;
+    }
+
+    // Reseta a arquitetura
+    public void resetarArquitetura() {
+        this.registradores.clear();
+        this.instrucoes.clear();
+        this.memoria.clear();
+        this.emExecucao = false;
+        this.cicloExecucao = 0;
+        // Re-inicializa os registradores
+        for (int i = 0; i < registradores.size(); i++) {
+            this.registradores.add(0);  // Resetando os registradores
+        }
+    }
+
+    // Método para executar uma instrução individualmente
+    public void executarInstrucoes(Instrucao instrucao) {
+        switch (instrucao.getTipo()) {
+            case ADD: 
+                int op1 = lerRegistrador(instrucao.getOp1());
+                int op2 = lerRegistrador(instrucao.getOp2());
+                int resultado = op1 + op2;
+                escreverRegistrador(instrucao.getRegistradorIndex(), resultado);
+                break;
+
+            case SUB: 
+                op1 = lerRegistrador(instrucao.getOp1());
+                op2 = lerRegistrador(instrucao.getOp2());
+                resultado = op1 - op2;
+                escreverRegistrador(instrucao.getRegistradorIndex(), resultado);
+                break;
+
+            case DIV:
+                op1 = lerRegistrador(instrucao.getOp1());
+                op2 = lerRegistrador(instrucao.getOp2());
+                if (op2 == 0) {
+                    System.out.println("Erro: Divisão por zero.");
+                    break;
+                }
+                resultado = op1 / op2;
+                escreverRegistrador(instrucao.getRegistradorIndex(), resultado);
+                break;
+
+            case MUL: 
+                op1 = lerRegistrador(instrucao.getOp1());
+                op2 = lerRegistrador(instrucao.getOp2());
+                resultado = op1 * op2;
+                escreverRegistrador(instrucao.getRegistradorIndex(), resultado);
+                break;
+
+            case LW:
+                op1 = instrucao.getOp1(); 
+                op2 = lerRegistrador(instrucao.getOp2()); 
+                escreverRegistrador(instrucao.getRegistradorIndex(), lerMemoria(op1 + op2)); 
+                break;
+
+            case SW:
+                op1 = instrucao.getOp1(); 
+                op2 = lerRegistrador(instrucao.getOp2()); 
+                escreverMemoria(op1 + op2, lerRegistrador(instrucao.getRegistradorIndex())); 
+                break;
+
+                case BEQ:
+                op1 = lerRegistrador(instrucao.getOp1());
+                op2 = lerRegistrador(instrucao.getOp2());
+                // Desvia se os registradores forem iguais
+                if (op1 == op2) {
+                    this.pc = instrucao.getOp1(); // Salta para o endereço armazenado em op1**
+                }
+                break;
+
+            case BNE:
+                op1 = lerRegistrador(instrucao.getOp1());
+                op2 = lerRegistrador(instrucao.getOp2());
+                // Desvia se os registradores forem diferentes
+                if (op1 != op2) {
+                    this.pc = instrucao.getOp1(); // Salta para o endereço armazenado em op1**
+                }
+                break;
+
+            case JMP:
+                // Desvio incondicional
+                this.pc = instrucao.getOp1(); // Atualiza o PC para o endereço de salto
+                break;
+
+            case HALT:
+                // Interrompe a execução
+                pararExecucao(); 
+                break;
+
+            default:
+                System.out.println("Instrução não suportada");
+                break;
+        }
+    }
+
+    // Getters e Setters
     public List<Instrucao> getInstrucoes() {
         return instrucoes;
     }
@@ -92,80 +213,11 @@ public abstract class ArquiteturaBase {
         return registradores;
     }
 
-    // Exemplo de método de resetar a arquitetura (caso seja necessário reiniciar o estado)
-    public void resetarArquitetura() {
-        this.registradores.clear();
-        this.instrucoes.clear();
-        this.emExecucao = false;
-        this.cicloExecucao = 0;
-        for (int i = 0; i < registradores.size(); i++) {
-            this.registradores.add(0);  // Resetando os registradores
-        }
+    public List<Integer> getMemoria() {
+        return memoria;
     }
 
-    // Método para executar uma instrução individualmente
-    public void executarInstrucoes(Instrucao instrucao) {
-        // Implementar o restante das lógica de instruçoês, manipulando os registradores
-        switch (instrucao.getTipo()) { // Verifica o tipo de instrução
-            case ADD: // Adição
-                int op1 = lerRegistrador(instrucao.getOp1()); // Lê o valor do registrador
-                int op2 = lerRegistrador(instrucao.getOp2()); // Lê o valor do registrador
-                int resultado = op1 + op2; // Realiza a operação
-                escreverRegistrador(instrucao.getRegistradorIndex(), resultado); // Escreve o resultado no registrador
-                break; // Sai do switch
-
-            case SUB: // Subtração
-                op1 = lerRegistrador(instrucao.getOp1()); // Lê o valor do registrador
-                op2 = lerRegistrador(instrucao.getOp2()); // Lê o valor do registrador
-                resultado = op1 - op2; // Realiza a operação
-                escreverRegistrador(instrucao.getRegistradorIndex(), resultado); // Escreve o resultado no registrador
-                break; // Sai do switch
-
-            case DIV:
-                op1 = lerRegistrador(instrucao.getOp1()); // Lê o valor do registrador
-                op2 = lerRegistrador(instrucao.getOp2()); // Lê o valor do registrador
-                resultado = op1 / op2; // Realiza a operação
-                escreverRegistrador(instrucao.getRegistradorIndex(), resultado); // Escreve o resultado no registrador
-                break; // Sai do switch
-
-            case MUL:
-                op1 = lerRegistrador(instrucao.getOp1()); // Lê o valor do registrador
-                op2 = lerRegistrador(instrucao.getOp2()); // Lê o valor do registrador
-                resultado = op1 * op2; // Realiza a operação
-                escreverRegistrador(instrucao.getRegistradorIndex(), resultado); // Escreve o resultado no registrador
-                break; // Sai do switch
-
-            case LW:
-                op1 = instrucao.getOp1(); // Pega valor constante
-                op2 = lerRegistrador(instrucao.getOp2()); // Lê o valor do registrador
-                escreverRegistrador(instrucao.getRegistradorIndex(), lerRegistrador(op1 + op2)); // Lê e escreve no registrador
-                break; // Sai do switch
-
-            case SW:
-                op1 = instrucao.getOp1(); // Pega valor constante
-                op2 = lerRegistrador(instrucao.getOp2()); // Lê o valor do registrador
-                escreverRegistrador((op1 + op2), lerRegistrador(instrucao.getRegistradorIndex())); // Lê e escreve no registrador
-                break; // Sai do switch
-
-            case BEQ:
-
-                break; // Sai do switch
-
-            case BNE:
-
-                break; // Sai do switch
-
-            case JMP:
-
-                break; // Sai do switch
-
-            case HALT:
-                pararExecucao(); // Para a execução da simulação
-                break; // Sai do switch
-
-            default: // Caso a instrução não seja suportada
-                System.out.println("Instrução não suportada");
-                break;
-        }
+    public int getPc() {
+        return pc;
     }
 }

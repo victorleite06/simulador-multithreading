@@ -10,9 +10,15 @@ package Arquiteturas;
 import Core.Instrucao;
 
 public class BMT extends ArquiteturaBase {
+
+    private int pipelineIF = -1; // Instruction Fetch
+    private int pipelineID = -1; // Instruction Decode
+    private int pipelineEX = -1; // Execute
+    private int pipelineWB = -1; // Write Back
+
     // Construtores
     public BMT(int numeroRegistradores) {
-        super(numeroRegistradores);
+        super(numeroRegistradores, 1024); // Inicializa com memória de tamanho 1024
     }
 
     // Sobrescreve o método de execução do ciclo (Lógica de execução do BMT)
@@ -23,17 +29,42 @@ public class BMT extends ArquiteturaBase {
             return;
         }
 
-        int maxInstrucoesPorCiclo = 4;  // Número máximo de instruções a serem processadas por ciclo
+        // Em um ciclo, até 4 instruções podem ser processadas
+        int maxInstrucoesPorCiclo = 4;
 
-        // Processa as instruções em blocos
-        for (int i = 0; i < maxInstrucoesPorCiclo && !this.instrucoes.isEmpty(); i++) { // Processa até o limite de instruções por ciclo
+        // Processa até o limite de instruções por ciclo
+        for (int i = 0; i < maxInstrucoesPorCiclo && !this.instrucoes.isEmpty(); i++) {
             Instrucao instrucao = this.instrucoes.remove(0);
             System.out.println("Executando instrução " + instrucao.getTipo() + " no BMT");
 
-            // Adicionar a lógica específica para manipular os registradores, realizando as operações necessárias com base no tipo de instrução
-            executarInstrucoes(instrucao);
+            // Simula o pipeline
+            fetch(instrucao);
+            decode();
+            execute();
+            writeBack();
         }
 
-        this.cicloExecucao++; // Incrementa o contador de ciclos
+        // Incrementa o ciclo de execução
+        incrementarCiclo();
+    }
+
+    // Simula a fase de busca da instrução (Instruction Fetch)
+    private void fetch(Instrucao instrucao) {
+        pipelineIF = instrucao.getOp1();
+    }
+
+    // Simula a fase de decodificação da instrução (Instruction Decode)
+    private void decode() {
+        pipelineID = pipelineIF;
+    }
+
+    // Simula a fase de execução (Execute)
+    private void execute() {
+        pipelineEX = pipelineID;
+    }
+
+    // Simula a fase de escrita de volta (Write Back)
+    private void writeBack() {
+        pipelineWB = pipelineEX;
     }
 }

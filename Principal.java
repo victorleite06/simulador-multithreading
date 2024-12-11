@@ -27,10 +27,10 @@ public class Principal {
                 arquitetura = new BMT(32);  // 32 registradores para BMT
                 break;
             case 2:
-                arquitetura = new SMT(32);  // 32 registradores para SMT
+                arquitetura = new SMT(32, 1024);  // 32 registradores para SMT
                 break;
             case 3:
-                arquitetura = new IMT(32);  // 32 registradores para IMT
+                arquitetura = new IMT(32, 1024);  // 32 registradores para IMT
                 break;
             default:
                 System.out.println("Opção inválida.");
