@@ -64,7 +64,8 @@ public class SMT extends ArquiteturaBase {
     }
 
     public void avancarCiclo(Instrucao novaInstrucao) {
-        if (!instrucoes.isEmpty()) {
+        if (novaInstrucao.getTipo() != InstrucaoTipoEnum.NOP)
+        {
             if (detecConflito(novaInstrucao)) { // Verifica se há conflito de dados antes de avançar o ciclo
                 instrucoes.add(0, new Instrucao(InstrucaoTipoEnum.NOP, null, null, null)); // Adiciona uma bolha (NOP) no pipeline
                 bolhas++;
@@ -73,9 +74,11 @@ public class SMT extends ArquiteturaBase {
                 // Não remove a última instrução do pipeline, apenas avança as instruções
                 instrucoes.add(0, novaInstrucao); // Adiciona a nova instrução no início do pipeline
             }
-            ciclos++; // Incrementa o contador de ciclos
+    
         }
     }
+    
+
 
     private boolean detecConflito(Instrucao novaInstrucao) { // Verifica se há conflito em dependências de dados
         if (novaInstrucao == null) {
@@ -114,3 +117,4 @@ public class SMT extends ArquiteturaBase {
         executor.shutdown(); // Encerra o ExecutorService
     }
 }
+
