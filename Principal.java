@@ -5,6 +5,7 @@ import Arquiteturas.SMT;
 import Core.GerenciadorInstrucoes;
 import Core.Instrucao;
 import Core.InstrucaoTipoEnum;
+import Core.Metricas;
 
 import java.util.Scanner;
 
@@ -148,5 +149,29 @@ public class Principal {
         for (int i = 0; i < arquitetura.getRegistradores().size(); i++) {
             System.out.println("R" + i + ": " + arquitetura.lerRegistrador(i));
         }
+    
+        // Medindo as métricas
+        int ciclos = arquitetura instanceof SMT ? ((SMT) arquitetura).getCiclos() : arquitetura.getCicloExecucao();
+        int instrucoesExecutadas;
+        if (arquitetura instanceof SMT) {
+            instrucoesExecutadas = ((SMT) arquitetura).getInstrucoes().size();
+        }
+        else if(arquitetura instanceof BMT){
+            instrucoesExecutadas = quantidadeInstrucoes; //Como o BMT executa todas as instrucoes, utilize a quantidade inicial.
+        }
+        else{
+            instrucoesExecutadas = arquitetura.getInstrucoes().size();
+        }
+        int bolhas = 0;
+
+        double ipc = Metricas.calcularIPC(instrucoesExecutadas, ciclos);
+        double custoPorInstrucao = Metricas.calcularCustoPorInstrucao(instrucoesExecutadas, ciclos);
+        double custoBolhas = Metricas.calcularCustoBolhas(bolhas, ciclos);
+
+        System.out.println("\nMétricas:");
+        System.out.println("IPC (Instruções por ciclo): " + ipc);
+        System.out.println("Custo por instrução: " + custoPorInstrucao);
+        System.out.println("Custo de bolhas: " + custoBolhas + "%");
     }
 }
+
