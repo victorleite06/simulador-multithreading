@@ -51,3 +51,4 @@ public class IMT extends ArquiteturaBase {
         this.cicloExecucao++; // Incrementa o contador de ciclos
     }
 }
+
