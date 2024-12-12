@@ -17,6 +17,7 @@ public abstract class ArquiteturaBase {
     protected boolean emExecucao; // Indica se a execução está em andamento
     protected int cicloExecucao; // Contador de ciclos de execução
     protected int pc; // Program Counter (contador de programa)
+    protected int instrucoesExecutadas = 0; // Declara e inicializa o contador
 
     // Construtores
     public ArquiteturaBase(int numeroRegistradores, int tamanhoMemoria) {
@@ -198,7 +199,15 @@ public abstract class ArquiteturaBase {
 
     // Getters e Setters
     public List<Instrucao> getInstrucoes() {
-        return instrucoes;
+        return new ArrayList<>(this.instrucoes);
+    }
+
+    public int getInstrucoesExecutadas() { // Getter para acessar o contador
+        return instrucoesExecutadas;
+    }
+
+    public void incrementarInstrucoesExecutadas() {
+        this.instrucoesExecutadas++;
     }
 
     public boolean isEmExecucao() {
